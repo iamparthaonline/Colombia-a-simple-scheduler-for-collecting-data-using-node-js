@@ -1,0 +1,34 @@
+{{> header }}
+<div class="container">
+    <form action="/results" method="POST">
+        <div class="row">
+            <div class="six columns">
+                <label for="keywords">Search Name</label>
+                <input class="u-full-width" type="text" name="search_name" id="search_name">
+                <br>
+            </div>
+            <div class="six columns">
+                <form action="/results" method="POST">
+                    <label for="keywords">Terms</label>
+                    <input class="u-full-width" type="text" name="keywords" id="keywords">
+                    <br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="six columns">
+                <label for="urls">URLs</label>
+                <textarea class="u-full-width" type="text" name="urls" id="urls"></textarea>
+                <br>
+            </div>
+            <div class="six columns source-container">
+                {{#each sourcesArray}}
+                <div class="select-source-container">
+                    <input type="checkbox" onclick="addUrl(this)" id="check-{{@index}}" value="{{this}}" />
+                    <label for="check-{{@index}}">{{this}}</label>
+                </div>
+                {{/each}}
+            </div>
+            <input class="u-full-width" type="submit" value="Search now">
+        </div>
+    </form>
+</div>

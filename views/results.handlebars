@@ -1,0 +1,23 @@
+{{> header }}
+<div class="container">
+        <table class="u-full-width">
+            <thead>
+                <tr>
+                    <th>Link</th>
+                    <th>availableKeywords</th>
+                    <th>source</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each results}}
+                <tr>
+                    <td>
+                        <a href="{{this.anchorLink}}"> {{{this.anchorText}}} </a>
+                    </td>
+                    <td>{{this.availableKeywords}}</td>
+                    <td>{{this.source}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+</div>

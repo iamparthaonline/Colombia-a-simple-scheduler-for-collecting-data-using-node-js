@@ -1,0 +1,9 @@
+p{font-color:#343434}a{color:#343432;font-weight:bold}span{color:#fff}label{display: inline-block; font-size: 12px;}.select-source-container{display: block;}
+.select-source-container pre{margin: 0;}
+.source-container {
+	background: #F1F1F1;
+    border: 1px solid #E1E1E1;
+}
+body{
+	font-family: consolas;
+}
