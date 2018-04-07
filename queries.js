@@ -28,6 +28,14 @@ function addNewArticle(newArticleData) {
         });
 }
 
+function getArticleByName(name, callback) {
+    low(articleAdaptar)
+        .then(db => {
+            let list = db.get('articles').filter(data => data.name === name).value();
+            callback(list);            
+        });
+}
+
 function getAllArticles() {
     return low(articleAdaptar)
         .then(db => {
@@ -61,5 +69,6 @@ module.exports = {
     getAllArticles,
     addNewArticle,
     addNewSource,
-    getAllSources
+    getAllSources,
+    getArticleByName
 };

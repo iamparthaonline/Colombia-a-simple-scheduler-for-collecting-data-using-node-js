@@ -1,6 +1,11 @@
 {{> header }}
 <div class="container">
-        <h2><a href="list/{{name}}">{{name}}</a></h2>
+    {{#each results}}
+        <h3>{{this.name}}</h3>
+        <h4>{{this.article.[0].time}}</h4>
+        
+        {{#each this.article.[0].data}}
+        
         <table class="u-full-width">
             <thead>
                 <tr>
@@ -10,7 +15,6 @@
                 </tr>
             </thead>
             <tbody>
-                {{#each results}}
                 <tr>
                     <td>
                         <a href="{{this.anchorLink}}"> {{{this.anchorText}}} </a>
@@ -18,7 +22,9 @@
                     <td>{{this.availableKeywords}}</td>
                     <td>{{this.source}}</td>
                 </tr>
-                {{/each}}
             </tbody>
         </table>
+        {{/each}}        
+    {{/each}}
+
 </div>

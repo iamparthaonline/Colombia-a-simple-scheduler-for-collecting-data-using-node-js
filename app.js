@@ -48,8 +48,9 @@ var getLinkText = (linkArray, keywords, source) => {
     return data;
 }
 
-var colombia = (res, urls, data, counter, keywords) => {
+var colombia = (res, urls, data, counter, keywords, name, time, isSchedule) => {
 
+    const baseCounter = counter;
     request(urls[counter], function(error, response, html) {
 
         if (!error) {
@@ -61,19 +62,23 @@ var colombia = (res, urls, data, counter, keywords) => {
 
             if (counter > 0) {
 
-                return colombia(res, urls, data, --counter, keywords);
+                return colombia(res, urls, data, --counter, keywords, name, time);
             } else {
 
-                saveArticle(data);
-                return res.render('results', { results: data });
+                saveArticle(data, name, time);                
+                if(!isSchedule){
+                    
+                    scheduler({}, urls, data, baseCounter, keywords, name, Date.now(), true);
+                    return res.render('results', { results: data, name: name });                  
+                }
             }
         }
     });
 }
 
-var saveArticle = (articleDataList) => {
+var saveArticle = (articleDataList, name, time) => {
 
-        db.addNewArticle(articleDataList);
+        db.addNewArticle({article: [{data: articleDataList, time: time}], name: name });
 }
 
 /* --- Utility Methods --- */
@@ -104,14 +109,18 @@ var searchValue = (targetString, searchTerm) => {
     return (targetString.toLowerCase().includes(searchTerm.toLowerCase()));
 }
 
-var createNames = (str) => {
+var createName = (str) => {
     
-    return str.split(' ').join('_');
+    return ( str.split(' ').join('_') +'___'+ Date.now() );
 }
 
 /*--- Executer Configuration ---*/
-
-executer.scheduleMin();
+var scheduler = (res, urls, data, counter, keywords, name, time, isSchedule) => {
+    
+    executer.scheduleMin((fireTime)=> {
+        colombia (res, urls, data, counter, keywords, name, fireTime, isSchedule);        
+    });
+}
 
 /* -- Static Paths -- */
 
@@ -132,10 +141,21 @@ app.get('/', function(req, res) {
 app.post('/results', function(req, res) {
 
     var urls = req.body.urls.split(',');
-    colombia(res, urls, [], (urls.length - 1), req.body.keywords.split(','));
+    var name = createName(req.body.search_name);
+    colombia(res, urls, [], (urls.length - 1), req.body.keywords.split(','), name, Date.now());
 });
+
+/* -- Get Results By name -- */
+app.get('/list/:name', function(req, res) {
+
+    db.getArticleByName(req.params.name, (sourcesArray) => {
+        res.render('list', { results: sourcesArray });
+    });
+});
+
 
 /* -- Server configs --*/ 
 app.listen(3030, () => {
     console.log('Colombia is up at http://localhost:3030');
 });
+
